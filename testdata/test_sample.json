@@ -1,0 +1,23 @@
+{
+    "test_sample": {
+        "test_sample_case": {
+            "test_data_set": {
+                "positive": [
+                    {
+                        "_case_id": "1",
+                        "test_cmds": [
+                            {
+                                "command": "pwd",
+                                "expected_result": "root"
+                            },
+                            {
+                                "command": "cd /tmp; pwd",
+                                "expected_result": "tmp"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}
