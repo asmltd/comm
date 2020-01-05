@@ -69,6 +69,34 @@ class RemoteExecution:
         else:
             logger.warn("Host IP or Command to be executed is empty")
 
+
+
+    def copy_local_file_remote(self, host_ip,
+                               file_name, remote_file_name,
+                               user_name, pswd='root'):
+        if self.validate_ssh(host_ip):
+            try:
+                transport = paramiko.Transport((host_ip, 22))
+                transport.connect(username=user_name, password=pswd)
+                sftp = paramiko.SFTPClient.from_transport(transport)
+                try:
+                    logger.info(
+                        "Copying the file to remote directory %s"
+                        % remote_file_name)
+                    rvalue = sftp.put(file_name, remote_file_name)
+                    sftp.close()
+                    return True
+                except Exception as e:
+                    logger.warn("Error: %s" % e)
+            except Exception as e:
+                logger.warn("Error: %s" % e)
+                logger.info(
+                    "Unable to ssh to the host ip %s with user: %s and pem: %s ",
+                    host_ip, user_name, pswd)
+        else:
+            logger.warn("Host %s is not reachable" % host_ip)
+
+
     def remote_command_exec_pem(self, host_ip,
                             cmd, user_name='root',
                             pem_file='secret.pem', cust_port=22):

@@ -8,16 +8,64 @@
                         "test_cmds": [
                             {
                                 "command": "pwd",
-                                "expected_result": "root"
+                                "match_result": "root"
                             },
                             {
                                 "command": "cd /tmp; pwd",
-                                "expected_result": "tmp"
+                                "match_result": "tmp"
                             }
                         ]
                     }
                 ]
             }
-        }
+        },
+	"test_change_device_timezone": {
+	  "test_data_set": {
+                "positive": [
+                    {
+                        "_case_id": "3",
+			"description": "Test TimeZone change on CU Device",
+			"test_cmds": [
+			    {
+				"command": "python spv.py 'Device.Time.LocalTimeZone' 'IST' '6' >/dev/null 2>&1; echo $?",
+				"return_code":0
+			    },
+			    {
+				"command": "python spv.py commit >/dev/null 2>&1; echo $?",
+                                "return_code":0
+                            },
+			    {
+                                "command": "sleep 15; echo $?",
+                                "return_code":0
+                            },
+			    {
+                                "command": "date +%Z",
+                                "match_result": "IST"
+                            }
+                        ]
+                    }
+                ]
+            }
+        },
+        "test_device_reboot": {
+          "test_data_set": {
+                "positive": [
+                    {
+                        "_case_id": "4",
+			"description": "Test Reboot of CU Device",
+                        "test_cmds": [
+                            {
+                                "command": "nohup reboot 2>&1 >/dev/null &",
+				"exception": "reboot"
+			    },
+			    {
+				"command": "cat /proc/uptime | cut -d'.' -f1",
+				"num_greater": "300"
+                            }
+                        ]
+                    }
+                ]
+            }
+        }			
     }
 }
